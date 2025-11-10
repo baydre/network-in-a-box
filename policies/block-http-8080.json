@@ -1,0 +1,21 @@
+{
+  "subnet": "10.10.0.0/16",
+  "ingress": [
+    {
+      "port": 8080,
+      "protocol": "tcp",
+      "source": "0.0.0.0/0",
+      "action": "deny",
+      "description": "Block HTTP traffic on port 8080"
+    }
+  ],
+  "egress": [
+    {
+      "port": "all",
+      "protocol": "all",
+      "destination": "0.0.0.0/0",
+      "action": "allow",
+      "description": "Allow all outbound traffic"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "subnet": "10.0.1.0/24",
+  "ingress": [
+    {
+      "port": 80,
+      "protocol": "tcp",
+      "source": "0.0.0.0/0",
+      "action": "allow",
+      "description": "Allow HTTP traffic"
+    },
+    {
+      "port": 22,
+      "protocol": "tcp",
+      "source": "0.0.0.0/0",
+      "action": "deny",
+      "description": "Block SSH traffic"
+    }
+  ],
+  "egress": [
+    {
+      "port": "all",
+      "protocol": "all",
+      "destination": "0.0.0.0/0",
+      "action": "allow",
+      "description": "Allow all outbound traffic"
+    }
+  ]
+}
