@@ -4,8 +4,6 @@ Network-in-a-Box is a production-ready VPC simulation tool that recreates core c
 
 ## Features
 
-## Features
-
 **Complete VPC Lifecycle Management**
 - Provision and tear down VPCs with public + private subnets using one command
 - Dedicated NAT namespace with internet gateway functionality  
