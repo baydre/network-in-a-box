@@ -1,0 +1,29 @@
+[
+  {
+    "direction": "inbound",
+    "protocol": "tcp",
+    "port": 80,
+    "source": "0.0.0.0/0",
+    "action": "allow"
+  },
+  {
+    "direction": "inbound",
+    "protocol": "tcp",
+    "port": 443,
+    "source": "10.0.0.0/16",
+    "action": "deny"
+  },
+  {
+    "direction": "outbound",
+    "protocol": "tcp",
+    "port": 53,
+    "source": "0.0.0.0/0",
+    "action": "allow"
+  },
+  {
+    "direction": "outbound",
+    "protocol": "icmp",
+    "source": "8.8.8.8/32",
+    "action": "allow"
+  }
+]
