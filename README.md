@@ -313,8 +313,6 @@ sudo ./src/vpcctl.py delete-vpc --name <vpc-name>  # Automatic cleanup
 
 ## Project Status
 
-### Compliance Score: Perfect 17/17
-
 **Requirements Met:**
 - All 5 required variables implemented (VPC_NAME, CIDR_BLOCK, etc.)
 - Python CLI with comprehensive validation  
