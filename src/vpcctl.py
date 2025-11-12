@@ -145,9 +145,10 @@ class NetworkInABox:
             for addr in ip_addrs:
                 self.execute_command(["ip", "addr", "add", addr, "dev", name])
 
-        # Enable bridge-specific settings
-        self.execute_command(["sysctl", "-w", "net.bridge.bridge-nf-call-iptables=1"])
-        self.execute_command(["sysctl", "-w", "net.bridge.bridge-nf-call-ip6tables=1"])
+        # Enable bridge-specific settings but disable netfilter for bridge traffic
+        # This prevents iptables from interfering with internal VPC bridge communication
+        self.execute_command(["sysctl", "-w", "net.bridge.bridge-nf-call-iptables=0"])
+        self.execute_command(["sysctl", "-w", "net.bridge.bridge-nf-call-ip6tables=0"])
 
         # Enable promiscuous mode for better network visibility
         self.execute_command(["ip", "link", "set", "dev", name, "promisc", "on"], check=False)
@@ -289,10 +290,17 @@ class NetworkInABox:
             ["ip", "netns", "exec", namespace, "iptables", "-A", "FORWARD", "-i", internal_iface, "-o", internal_iface, "-j", "ACCEPT"],
             ["ip", "netns", "exec", namespace, "iptables", "-A", "FORWARD", "-i", internal_iface, "-o", external_iface, "-j", "ACCEPT"],
             ["ip", "netns", "exec", namespace, "iptables", "-A", "FORWARD", "-i", external_iface, "-o", internal_iface, "-m", "state", "--state", "RELATED,ESTABLISHED", "-j", "ACCEPT"],
-            ["ip", "netns", "exec", namespace, "iptables", "-t", "nat", "-A", "POSTROUTING", "-o", external_iface, "-j", "MASQUERADE"],
         ]
         for cmd in cmds:
             self.execute_command(cmd, check=False)
+
+        # Add MASQUERADE rules for each VPC network
+        for cidr in vpc_networks:
+            self.execute_command([
+                "ip", "netns", "exec", namespace,
+                "iptables", "-t", "nat", "-A", "POSTROUTING",
+                "-s", cidr, "-o", external_iface, "-j", "MASQUERADE"
+            ], check=False)
 
         for cidr in vpc_networks:
             self.execute_command([
